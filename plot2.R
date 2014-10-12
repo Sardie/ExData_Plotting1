@@ -1,34 +1,32 @@
 plot2 <- function() {
         data <- read.table("household_power_consumption.txt", sep=";")
-        data2 <- data[2:nrow(data),]
-        labels <- c("Date", "Time", "Global_active_power", "Global_reactive_power", "Voltage", "Global_intensity", "Sub_metering_1", "sub_metering_2", "sub_metering_3")
-        names(data2) <- labels
-        data2$Date <- as.character(data2$Date)
-        data2 <- data2[(data2$Date == "1/2/2007" | data2$Date == "2/2/2007"),]
-        data2$Global_active_power <- as.character(data2$Global_active_power)
-        data2$Global_active_power <- as.numeric(data2$Global_active_power)
+        data <- data[2:nrow(data),]
         
-        data2$Date <- as.Date(data2$Date, "%d/%m/%Y")
+        data <- data[(data$V1 == "1/2/2007" | data$V1 == "2/2/2007"),]
         
-        data2$Time <- as.character(data2$Time)
+        data$V1 <- as.character(data$V1)
         
-        data2[,10] <- paste(data2$Date, data2$Time, sep=" ")
+        data$V1 <- as.Date(data$V1, "%d/%m/%Y")
+        
+        data$V2 <- as.character(data$V2)
+        
+        data[,10] <- paste(data$V1, data$V2, sep=" ")
+        
+        labels <- c("Date", "Time", "Global_active_power", "Global_reactive_power", "Voltage", "Global_intensity", "Sub_metering_1", "Sub_metering_2", "Sub_metering_3", "Date_Time")
+        names(data) <- labels
         
         
-        labels <- c("Date", "Time", "Global_active_power", "Global_reactive_power", "Voltage", "Global_intensity", "Sub_metering_1", "sub_metering_2", "sub_metering_3", "Date_Time")
-        names(data2) <- labels
+        data$Global_active_power <- as.character(data$Global_active_power)
+        data$Global_active_power <- as.numeric(data$Global_active_power)
         
-        data2$Date_Time <- as.POSIXct(strftime(data2$Date_Time, "%Y-%m-%d %H:%M:%S"), format="%Y-%m-%d %H:%M:%S")
+        data$Date_Time <- as.POSIXct(strftime(data$Date_Time, "%Y/%m/%d %H:%M:%S"), format="%Y/%m/%d %H:%M:%S")
         
-        plot(data2$Date_Time, data2$Global_active_power, col="black", ylab = "Global Active Power (kilowatts)", pch = ".", xlab = " ")
-        lines(data2$Date_Time, data2$Global_active_power, col="black", ylab = "Global Active Power (kilowatts)", xlab = " ", pch = ".", lwd = 2)
-              
+        plot(data$Date_Time, data$Global_active_power, col="black", ylab = "Global Active Power (kilowatts)", pch = ".", xlab = " ")
+        lines(data$Date_Time, data$Global_active_power, col="black", lwd = 2)
         
         dev.copy(png, file = "plot2.png")
         dev.off()
         
-        ##strftime(data2$Date, "%a")
-        
-        ##strftime(c, "%a %H:%M:%S")
+
         
 }
